@@ -13,6 +13,11 @@ import { removeBackground } from './rembgApi'
 
 const logger = getLogger()
 
+/**
+   * Creates a sticker from a given message and options.
+   * @param {WAMessage} message The message to create the sticker from.
+   * @param {MakeStickerOptions} options The options to create the sticker with.
+   * @returns {Promise<WAMessage>} The result of send message.   */
 export const makeSticker = async (
   message: WAMessage,
   options: MakeStickerOptions = {}
@@ -52,6 +57,8 @@ export const makeSticker = async (
   if (animated) {
     const seconds = mediaMessage.message?.videoMessage?.seconds
     if (seconds && seconds > 10) {
+      // react error
+      if (needReact) await react(message, emojis.error)
       return await sendMessage(
         {
           text: spintax(
@@ -118,6 +125,11 @@ export const makeSticker = async (
   }
 }
 
+/**
+ * Converts a sticker message to an image message and sends it.
+ * @param {WAMessage} message The sticker message to convert and send.
+ * @returns {Promise<WAMessageExtended>} The result of send message.
+ */
 export const sendStickerAsImage = async (message: WAMessage) => {
   try {
     const image = (await downloadMediaMessage(
